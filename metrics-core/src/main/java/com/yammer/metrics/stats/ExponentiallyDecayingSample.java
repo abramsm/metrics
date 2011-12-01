@@ -51,10 +51,15 @@ public class ExponentiallyDecayingSample implements Sample {
 
     @Override
     public void clear() {
-        values.clear();
-        count.set(0);
-        this.startTime = tick();
-        nextScaleTime.set(System.nanoTime() + RESCALE_THRESHOLD);
+        lockForRescale();
+        try {
+           values.clear();
+           count.set(0);
+           this.startTime = tick();
+           nextScaleTime.set(System.nanoTime() + RESCALE_THRESHOLD);
+        } finally {
+            lockForRescale();
+        }
     }
 
     @Override
